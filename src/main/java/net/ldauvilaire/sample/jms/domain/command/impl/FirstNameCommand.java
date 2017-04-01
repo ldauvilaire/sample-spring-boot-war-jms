@@ -1,24 +1,22 @@
 package net.ldauvilaire.sample.jms.domain.command.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.ldauvilaire.sample.jms.domain.command.AbstractBaseCommand;
 import net.ldauvilaire.sample.jms.domain.dto.PersonDTO;
+import net.ldauvilaire.sample.jms.domain.spring.PersonService;
 
 public class FirstNameCommand extends AbstractBaseCommand {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FirstNameCommand.class);
-
+	private PersonService service;
 	private PersonDTO person;
 
-	public FirstNameCommand(PersonDTO person) {
+	public FirstNameCommand(PersonDTO person, PersonService service) {
 		super();
+		this.service = service;
 		this.person = person;
 	}
 
 	@Override
 	public void execute() {
-		LOGGER.info("=> FirstName : {}", (this.person == null) ? "" : this.person.getFirstName());
+		this.service.processFirstName(person);
 	}
 }

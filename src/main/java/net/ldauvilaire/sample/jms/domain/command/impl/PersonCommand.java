@@ -1,27 +1,25 @@
 package net.ldauvilaire.sample.jms.domain.command.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.ldauvilaire.sample.jms.domain.command.AbstractRecursiveCommand;
 import net.ldauvilaire.sample.jms.domain.command.MacroCommand;
 import net.ldauvilaire.sample.jms.domain.dto.PersonDTO;
+import net.ldauvilaire.sample.jms.domain.spring.PersonService;
 
 public class PersonCommand extends AbstractRecursiveCommand {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PersonCommand.class);
-
+	private PersonService service;
 	private PersonDTO person;
 
-	public PersonCommand(PersonDTO person, MacroCommand macro) {
+	public PersonCommand(PersonDTO person, MacroCommand macro, PersonService service) {
 		super(macro);
+		this.service = service;
 		this.person = person;
 	}
 
 	@Override
 	public void execute() {
-		LOGGER.info("=> Person : {}", (this.person == null) ? "<none>" : this.person.toString());
-		getMacro().add(new FirstNameCommand(this.person));
-		getMacro().add(new LastNameCommand(this.person));
+		this.service.processPerson(person);
+		getMacro().add(new FirstNameCommand(this.person, this.service));
+		getMacro().add(new LastNameCommand(this.person, this.service));
 	}
 }
