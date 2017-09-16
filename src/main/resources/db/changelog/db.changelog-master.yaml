@@ -17,6 +17,9 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: version
+                  type: integer
+              - column:
                   name: first_name
                   type: varchar(255)
                   constraints:
@@ -26,3 +29,9 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
+              - column:
+                  name: value
+                  type: bigint
+              - column:
+                  name: comment
+                  type: varchar(255)

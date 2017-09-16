@@ -25,7 +25,11 @@ import org.springframework.jms.annotation.EnableJms;
 @PropertySource("classpath:application.properties")
 public class ApplicationTestConfiguration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationTestConfiguration.class);
+    static {
+        System.setProperty("org.jboss.logging.provider", "slf4j");
+    }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationTestConfiguration.class);
 
 //	private static final String JNDI_ENV_PREFIX = "java:comp/env";
 

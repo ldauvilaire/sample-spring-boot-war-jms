@@ -26,10 +26,30 @@
 		</encoder>
 	</appender>
 
+    <logger name="org.apache.activemq" level="INFO" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.jboss" level="INFO" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
 	<logger name="org.hibernate" level="INFO" additivity="false">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</logger>
+
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
 	<logger name="org.springframework" level="INFO" additivity="false">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />

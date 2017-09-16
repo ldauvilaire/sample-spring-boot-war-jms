@@ -110,7 +110,7 @@ public class PersonMessageReceiverTest extends AbstractJUnit4SpringContextTests 
 		jmsTemplate.send(destination, (session) -> session.createTextMessage(message));
 
 		//-- Given son time to process --
-		long millis = 200;
+		long millis = 2000;
 		LOGGER.info("*** Waiting {} ms ...", millis);
 		Thread.sleep(millis);
 
@@ -145,7 +145,7 @@ public class PersonMessageReceiverTest extends AbstractJUnit4SpringContextTests 
 		jmsTemplate.send(destination, (session) -> session.createTextMessage(message));
 
 		//-- Given son time to process --
-		long millis = 200;
+		long millis = 2000;
 		LOGGER.info("*** Waiting {} ms ...", millis);
 		Thread.sleep(millis);
 
