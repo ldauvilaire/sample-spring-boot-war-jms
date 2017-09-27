@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.ldauvilaire.sample.telegram.TelegramBaseListener;
 import net.ldauvilaire.sample.telegram.TelegramLexer;
 import net.ldauvilaire.sample.telegram.TelegramListener;
 import net.ldauvilaire.sample.telegram.TelegramParser;
@@ -39,13 +40,8 @@ public class TelegramTest {
         String payload = read(is);
         LOGGER.info("Payload:\n{}", payload);
 
-        ANTLRInputStream inputStream = new ANTLRInputStream(payload);
-        TelegramLexer lexer = new TelegramLexer(inputStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        TelegramParser parser = new TelegramParser(tokenStream);
-
         // Walk it and attach our listener
-        TelegramListener listener = new TelegramListener() {
+        TelegramListener listener = new TelegramBaseListener() {
 
             @Override
             public void visitTerminal(TerminalNode node) {
@@ -158,8 +154,16 @@ public class TelegramTest {
             }
         };
 
-        LOGGER.info("Running Telegram Walker ...");
+
+        ANTLRInputStream inputStream = new ANTLRInputStream(payload);
+        TelegramLexer lexer = new TelegramLexer(inputStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        TelegramParser parser = new TelegramParser(tokens);
+
+        LOGGER.info("Parsing Telegram ...");
         TelegramContext context = parser.telegram();
+
+        LOGGER.info("Running Telegram Walker ...");
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, context);
     }
