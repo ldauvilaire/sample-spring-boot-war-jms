@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -155,8 +157,14 @@ public class TelegramTest {
         };
 
 
-        ANTLRInputStream inputStream = new ANTLRInputStream(payload);
+        LOGGER.info("Building Telegram Lexer ...");
+        CodePointCharStream inputStream = CharStreams.fromString(payload);
         TelegramLexer lexer = new TelegramLexer(inputStream);
+
+        LOGGER.info("Accessing Telegram Lexer All Tokens ...");
+        lexer.getAllTokens();
+
+        LOGGER.info("Building Telegram Parser ...");
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         TelegramParser parser = new TelegramParser(tokens);
 

@@ -21,7 +21,7 @@ shortAdressLine :
     ;
 
 normalAdressLine :
-    StartOfAddressSignal PriorityCode? addresseeIndicator+ EndOfAddressSignal
+    StartOfAddressSignal? PriorityCode? addresseeIndicator+ EndOfAddressSignal
     ;
 
 addresseeIndicator :
@@ -46,7 +46,7 @@ StartOfAddressSignal :
     ;
 
 DiversionIndicator :
-    'QSP' SPACE
+    'QSP '
     ;
 
 RoutingIndicator :
