@@ -3,50 +3,32 @@
 */
 grammar Telegram;
 
-/* Rule(s) */
 telegram :
     addressSection originSection textSection
     ;
 
 addressSection :
-    diversionLine? shortAdressLine* normalAdressLine
+    diversionLine? shortAddressLine* normalAddressLine
     ;
 
 diversionLine :
-    StartOfAddressSignal DiversionIndicator RoutingIndicator EndOfAddressSignal SpacingSignal
+    START_OF_ADDRESS DIVERSION_INDICATOR SPACE RoutingIndicator END_OF_ADDRESS SPACING
     ;
 
-shortAdressLine :
-    normalAdressLine SpacingSignal
+shortAddressLine :
+    normalAddressLine SPACING
     ;
 
-normalAdressLine :
-    StartOfAddressSignal? PriorityCode? addresseeIndicator+ EndOfAddressSignal
-    ;
-
-addresseeIndicator :
-    CityAirPortCode DepartmentCode NetworkUserDesignator ( CR | LF | SPACE )?
+normalAddressLine :
+    START_OF_ADDRESS (PriorityCode SPACE)? (AddresseeIndicator ( SPACE | CR? LF )?)+ END_OF_ADDRESS
     ;
 
 originSection :
-    originatorIndicator DoubleSignature? MessageIdentity?
-    ;
-
-originatorIndicator :
-    CityAirPortCode DepartmentCode NetworkUserDesignator SPACE
+    OriginatorIndicator SPACE (DoubleSignature SLASH)? MessageIdentity?
     ;
 
 textSection :
-    StartOfTextSignal Text EndOfTextSignal
-    ;
-
-
-StartOfAddressSignal :
-    CR | LF
-    ;
-
-DiversionIndicator :
-    'QSP '
+    START_OF_TEXT TextLine* END_OF_TEXT
     ;
 
 RoutingIndicator :
@@ -54,45 +36,126 @@ RoutingIndicator :
     | [0-9][0-9][0-9][0-9] 'X' [A-Z0-9][A-Z0-9][A-Z0-9]
     ;
 
-EndOfAddressSignal :
-    CR | LF | FULL_STOP
-    ;
-
-SpacingSignal :
-    '     '
-    ;
-
 PriorityCode :
-    ([A-Z0-9][A-Z0-9]) SPACE
+    [A-Z0-9][A-Z0-9]
+    ;
+
+AddresseeIndicator :
+    [A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]
+    ;
+
+OriginatorIndicator :
+    [A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]
     ;
 
 DoubleSignature :
-    ([A-Z0-9][A-Z0-9]) SLASH
+    [A-Z0-9][A-Z0-9]
     ;
 
 MessageIdentity :
-    ([A-Z0-9]*) LF
+    ([A-Z0-9] | FULL_STOP)+
     ;
 
-CityAirPortCode : ([A-Z0-9][A-Z0-9][A-Z0-9]) ;
-DepartmentCode : ([A-Z0-9][A-Z0-9]) ;
-NetworkUserDesignator : ([A-Z0-9][A-Z0-9]) ;
+TextLine :
+    [^\n]+
+    ;
 
+/*
+telegram :
+    addressSection originSection
+    ;
+
+addressSection :
+    diversionLine? shortAddressLine* normalAddressLine
+    ;
+
+diversionLine :
+    START_OF_ADDRESS DIVERSION_INDICATOR SPACE RoutingIndicator END_OF_ADDRESS SPACING
+    ;
+
+shortAddressLine :
+    normalAddressLine SPACING
+    ;
+
+normalAddressLine :
+    START_OF_ADDRESS (PriorityCode SPACE)? (addresseeIndicator ( SPACE | CR? LF )?)+ END_OF_ADDRESS
+    ;
+
+addresseeIndicator :
+    CityAirPortCode DepartmentCode NetworkUserDesignator
+    ;
+
+originSection :
+    originatorIndicator SPACE (DoubleSignature SLASH)? (MessageIdentity LF)?
+    ;
+
+originatorIndicator :
+    CityAirPortCode DepartmentCode NetworkUserDesignator
+    ;
+
+textSection :
+    START_OF_TEXT Text END_OF_TEXT
+    ;
+
+
+RoutingIndicator :
+      [A-Z0-9][A-Z0-9][A-Z0-9] 'X' [A-Z0-9][A-Z0-9][A-Z0-9]
+    | [0-9][0-9][0-9][0-9] 'X' [A-Z0-9][A-Z0-9][A-Z0-9]
+    ;
+
+PriorityCode :
+    [A-Z0-9][A-Z0-9]
+    ;
+
+DoubleSignature :
+    [A-Z0-9][A-Z0-9]
+    ;
+
+CityAirPortCode : [A-Z0-9][A-Z0-9][A-Z0-9] ;
+DepartmentCode : [A-Z0-9][A-Z0-9] ;
+NetworkUserDesignator : [A-Z0-9][A-Z0-9] ;
+
+fragment
+MessageIdentity :
+    [^\n]*
+    ;
+
+fragment
 Text :
     ()+
     ;
+*/
 
-StartOfTextSignal :
-    CR | LF
-    ;
-
-EndOfTextSignal :
-    CR | LF
-    ;
-
-
-CR : '\r' ;
-LF : '\n' ;
-SPACE : ' ' ;
+SOH       : [\u0001] ;
+STX       : [\u0002] ;
+ETX       : [\u0003] ;
+LF        : [\u000A] ;
+CR        : [\u000D] ;
+US        : [\u001F] ;
+SPACE     : ' ' ;
 FULL_STOP : '.' ;
-SLASH : '/' ;
+SLASH     : '/' ;
+
+DIVERSION_INDICATOR :
+    'QSP'
+    ;
+
+SPACING :
+    US  | SPACE SPACE SPACE SPACE SPACE
+    ;
+
+START_OF_ADDRESS :
+    CR? LF SOH
+    ;
+
+END_OF_ADDRESS :
+    CR? LF FULL_STOP
+    ;
+
+START_OF_TEXT :
+    CR? LF STX
+    ;
+
+END_OF_TEXT :
+    CR? LF ETX
+    ;
