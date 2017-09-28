@@ -26,10 +26,10 @@ import net.ldauvilaire.sample.telegram.TelegramParser;
 import net.ldauvilaire.sample.telegram.TelegramParser.AddressSectionContext;
 import net.ldauvilaire.sample.telegram.TelegramParser.DiversionLineContext;
 import net.ldauvilaire.sample.telegram.TelegramParser.NormalAddressLineContext;
-import net.ldauvilaire.sample.telegram.TelegramParser.OriginSectionContext;
+//import net.ldauvilaire.sample.telegram.TelegramParser.OriginSectionContext;
 import net.ldauvilaire.sample.telegram.TelegramParser.ShortAddressLineContext;
 import net.ldauvilaire.sample.telegram.TelegramParser.TelegramContext;
-import net.ldauvilaire.sample.telegram.TelegramParser.TextSectionContext;
+//import net.ldauvilaire.sample.telegram.TelegramParser.TextSectionContext;
 
 public class TelegramTest {
 
@@ -77,12 +77,12 @@ public class TelegramTest {
             @Override
             public void visitTerminal(TerminalNode node) {
                 String nodeValue = node.getText().replaceAll("\n", "\\\\n");
-                LOGGER.info("visitTerminal [{}] ...", nodeValue);
+                LOGGER.info("--- visitTerminal [{}] ...", nodeValue);
             }
             @Override
             public void visitErrorNode(ErrorNode node) {
                 String nodeValue = node.getText().replaceAll("\n", "\\\\n");
-                LOGGER.info("visitErrorNode [{}] ...", nodeValue);
+                LOGGER.info("--- visitErrorNode [{}] ...", nodeValue);
             }
 
             @Override
@@ -113,7 +113,20 @@ public class TelegramTest {
             }
             @Override
             public void exitAddressSection(AddressSectionContext ctx) {
-                LOGGER.info("<<< exitAddressSection ...");
+                if (ctx.isEmpty()) {
+                    LOGGER.info("<<< exitAddressSection is <empty>");
+                } else {
+                    DiversionLineContext diversionLine = ctx.diversionLine();
+                    if (diversionLine == null) {
+                        LOGGER.info("<<< exitAddressSection - Diversion Line is <null>");
+                    } else if (diversionLine.isEmpty()) {
+                        LOGGER.info("<<< exitAddressSection - Diversion Line is <empty>");
+                    } else {
+                        TerminalNode routing = diversionLine.RoutingIndicator();
+                        String routingValue = (routing == null) ? "<null>" : routing.getText();
+                        LOGGER.info("<<< exitAddressSection - Diversion Line - Routing = [{}]", routingValue);
+                    }
+                }
             }
 
             @Override
@@ -123,16 +136,17 @@ public class TelegramTest {
             @Override
             public void exitDiversionLine(DiversionLineContext ctx) {
                 TerminalNode routing = ctx.RoutingIndicator();
-                LOGGER.info("<<< exitDiversionLine - Routing = [{}]", (routing == null) ? "<null>" : routing.getText());
+                String routingValue = (routing == null) ? "<null>" : routing.getText();
+                LOGGER.info("<<< exitDiversionLine - Routing = [{}]", routingValue);
             }
 
             @Override
             public void enterShortAddressLine(ShortAddressLineContext ctx) {
-                LOGGER.info("enterShortAddressLine ...");
+                LOGGER.info(">>> enterShortAddressLine ...");
             }
             @Override
             public void exitShortAddressLine(ShortAddressLineContext ctx) {
-                LOGGER.info("exitShortAddressLine ...");
+                logShortAddressLine("<<< exitShortAddressLine", ctx);
             }
 
             @Override
@@ -141,22 +155,9 @@ public class TelegramTest {
             }
             @Override
             public void exitNormalAddressLine(NormalAddressLineContext ctx) {
-                TerminalNode priorityCode = ctx.PriorityCode();
-                LOGGER.info("<<< exitNormalAddressLine - Priority = [{}]", (priorityCode == null) ? "<null>" : priorityCode.getText());
-                List<TerminalNode> addresses = ctx.AddresseeIndicator();
-                if (addresses == null) {
-                    LOGGER.info("<<< exitNormalAddressLine - Addresses is <null>");
-                } else if (addresses.isEmpty()) {
-                    LOGGER.info("<<< exitNormalAddressLine - Addresses is <empty>");
-                } else {
-                    int addressIndex = 0;
-                    for (TerminalNode address : addresses) {
-                        addressIndex++;
-                        LOGGER.info("<<< exitNormalAddressLine - Addresses[{}] = [{}]", addressIndex, address.getText());
-                    }
-                }
+                logNormalAddressLine("<<< exitNormalAddressLine", ctx);
             }
-
+/*
             @Override
             public void enterOriginSection(OriginSectionContext ctx) {
                 LOGGER.info(">>> enterOriginSection ...");
@@ -170,13 +171,16 @@ public class TelegramTest {
                 TerminalNode identity = ctx.MessageIdentity();
                 LOGGER.info("<<< exitOriginSection - Identity = [{}]", (identity == null) ? "<null>" : identity.getText());
             }
+*/
 
+/*
             @Override
             public void enterTextSection(TextSectionContext ctx) {
                 LOGGER.info(">>> enterTextSection ...");
             }
             @Override
             public void exitTextSection(TextSectionContext ctx) {
+                LOGGER.info("<<< exitTextSection ...");
                 List<TerminalNode> textLines = ctx.TextLine();
                 if (textLines == null) {
                     LOGGER.info("<<< exitTextSection - Text Lines is <null>");
@@ -190,6 +194,7 @@ public class TelegramTest {
                     }
                 }
             }
+*/
         };
         walker.walk(listener, context);
     }
@@ -198,5 +203,34 @@ public class TelegramTest {
         try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
             return buffer.lines().collect(Collectors.joining("\n"));
         }
+    }
+
+    public static void logShortAddressLine(String prefix, ShortAddressLineContext ctx) {
+        NormalAddressLineContext normalAddress = ctx.normalAddressLine();
+        if (normalAddress == null) {
+            LOGGER.info("{} - Normal Address is <null>", prefix);
+        } else if (normalAddress.isEmpty()) {
+            LOGGER.info("{} - Normal Address is <empty>", prefix);
+        } else {
+            logNormalAddressLine(prefix + " - Normal Address", normalAddress);
+        }
+    }
+
+    public static void logNormalAddressLine(String prefix, NormalAddressLineContext ctx) {
+        TerminalNode priorityCode = ctx.PriorityCode();
+        LOGGER.info("{} - Priority = [{}]", prefix, (priorityCode == null) ? "<null>" : priorityCode.getText());
+        List<TerminalNode> addresses = ctx.AddresseeIndicator();
+        if (addresses == null) {
+            LOGGER.info("{} - Addresses is <null>", prefix);
+        } else if (addresses.isEmpty()) {
+            LOGGER.info("{} - Addresses is <empty>", prefix);
+        } else {
+            int addressIndex = 0;
+            for (TerminalNode address : addresses) {
+                addressIndex++;
+                LOGGER.info("{} - Addresses[{}] = [{}]", prefix, addressIndex, address.getText());
+            }
+        }
+
     }
 }

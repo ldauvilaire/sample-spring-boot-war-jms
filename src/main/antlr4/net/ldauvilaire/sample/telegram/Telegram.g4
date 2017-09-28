@@ -4,11 +4,11 @@
 grammar Telegram;
 
 telegram :
-    addressSection originSection textSection
+    addressSection /* originSection textSection */
     ;
 
 addressSection :
-    diversionLine? shortAddressLine* normalAddressLine
+    diversionLine? shortAddressLine*? normalAddressLine
     ;
 
 diversionLine :
@@ -24,7 +24,7 @@ normalAddressLine :
     ;
 
 originSection :
-    OriginatorIndicator SPACE (DoubleSignature SLASH)? MessageIdentity?
+    OriginatorIndicator SPACE /* DoubleSignature? MessageIdentity? */
     ;
 
 textSection :
@@ -40,9 +40,29 @@ PriorityCode :
     [A-Z0-9][A-Z0-9]
     ;
 
+DoubleSignature :
+    [A-Z0-9][A-Z0-9] SLASH
+    ;
+
 AddresseeIndicator :
     [A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]
     ;
+
+OriginatorIndicator :
+    [A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]
+    ;
+
+TextLine :
+    [^\n]+
+    ;
+
+/*
+MessageIdentity :
+    ([A-Z0-9] | SPACE | FULL_STOP)*
+    ;
+*/
+
+/*
 
 OriginatorIndicator :
     [A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]
@@ -52,13 +72,10 @@ DoubleSignature :
     [A-Z0-9][A-Z0-9]
     ;
 
-MessageIdentity :
-    ([A-Z0-9] | FULL_STOP)+
-    ;
-
 TextLine :
     [^\n]+
     ;
+*/
 
 /*
 telegram :
@@ -78,10 +95,10 @@ shortAddressLine :
     ;
 
 normalAddressLine :
-    START_OF_ADDRESS (PriorityCode SPACE)? (addresseeIndicator ( SPACE | CR? LF )?)+ END_OF_ADDRESS
+    START_OF_ADDRESS (TwoAlpha SPACE)? (SevenAlpha ( SPACE | CR? LF )?)+ END_OF_ADDRESS
     ;
 
-addresseeIndicator :
+SevenAlpha :
     CityAirPortCode DepartmentCode NetworkUserDesignator
     ;
 
@@ -103,7 +120,7 @@ RoutingIndicator :
     | [0-9][0-9][0-9][0-9] 'X' [A-Z0-9][A-Z0-9][A-Z0-9]
     ;
 
-PriorityCode :
+TwoAlpha :
     [A-Z0-9][A-Z0-9]
     ;
 
@@ -145,7 +162,7 @@ SPACING :
     ;
 
 START_OF_ADDRESS :
-    CR? LF SOH
+    CR? LF SOH?
     ;
 
 END_OF_ADDRESS :
@@ -153,9 +170,9 @@ END_OF_ADDRESS :
     ;
 
 START_OF_TEXT :
-    CR? LF STX
+    CR? LF STX?
     ;
 
 END_OF_TEXT :
-    CR? LF ETX
+    CR? LF ETX?
     ;
