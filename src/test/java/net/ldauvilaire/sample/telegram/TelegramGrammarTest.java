@@ -1,4 +1,4 @@
-package net.ldauvilaire.sample.iata;
+package net.ldauvilaire.sample.telegram;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +31,9 @@ import net.ldauvilaire.sample.telegram.TelegramParser.ShortAddressLineContext;
 import net.ldauvilaire.sample.telegram.TelegramParser.TelegramContext;
 //import net.ldauvilaire.sample.telegram.TelegramParser.TextSectionContext;
 
-public class TelegramTest {
+public class TelegramGrammarTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TelegramGrammarTest.class);
 
     @Test
     public void testParseAsmIata1() throws IOException {
