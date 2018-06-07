@@ -1,27 +1,28 @@
 package net.ldauvilaire.sample.jms.domain.xsd.filter.comparison;
 
 import net.ldauvilaire.sample.jms.domain.xsd.filter.AbstractFilter;
+import net.ldauvilaire.sample.jms.domain.xsd.filter.ComparisonOperator;
 
 public abstract class AbstractComparisonFilter extends AbstractFilter {
 
-	protected String operator;
-	protected String attribute;
+    protected ComparisonOperator operator;
+    protected String attribute;
 
-	public AbstractComparisonFilter(String operator, String attribute) {
-		this.operator = operator;
-		this.attribute = attribute;
-	}
+    public AbstractComparisonFilter(ComparisonOperator operator, String attribute) {
+        this.operator = operator;
+        this.attribute = attribute;
+    }
 
-	@Override
-	public boolean isLogic() {
-		return false;
-	}
+    @Override
+    public boolean isLogic() {
+        return false;
+    }
 
-	public String getOperator() {
-		return this.operator;
-	}
+    public ComparisonOperator getOperator() {
+        return this.operator;
+    }
 
-	public String getAttribute() {
-		return this.attribute;
-	}
+    public String getAttribute() {
+        return this.attribute;
+    }
 }

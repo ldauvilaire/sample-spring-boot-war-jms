@@ -1,5 +1,7 @@
 package net.ldauvilaire.sample.xsd.parser;
 
+import static net.ldauvilaire.sample.jms.domain.xsd.filter.XmlFilterConstants.FILTER_SCHEMA_FILE;
+
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
@@ -36,11 +38,9 @@ import net.ldauvilaire.xsd.filter.LogicType;
 import net.ldauvilaire.xsd.filter.UnaryComparisonType;
 import net.ldauvilaire.xsd.filter.UnaryLogicType;
 
-public class FilterParserTest {
+public class RawFilterParserTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FilterParserTest.class);
-
-	private static final String FILTER_SCHEMA_FILE = "xsd/filter/filter.xsd";
+	private static final Logger LOGGER = LoggerFactory.getLogger(RawFilterParserTest.class);
 
 	private static final String COMPLEX_FILTER = "data/xsd/complex-filter.xml";
 
