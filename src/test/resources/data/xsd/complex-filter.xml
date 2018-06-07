@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Filter xmlns="http://www.af-klm.com/filter"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.af-klm.com/filter filter.xsd">
+
+    <And>
+        <In>
+            <Attribute>airlineCode</Attribute>
+            <Value>AF</Value>
+            <Value>KL</Value>
+            <Value>A5</Value>
+        </In>
+        <IsNull>
+            <Attribute>operationalSuffix</Attribute>
+        </IsNull>
+        <Or>
+            <Not>
+                <Equals>
+                    <Attribute>iataAirportCode</Attribute>
+                    <Value>CDG</Value>
+                </Equals>
+            </Not>
+            <Equals>
+                <Attribute>flightNumber</Attribute>
+                <Value>1234</Value>
+            </Equals>
+        </Or>
+    </And>
+
+</Filter>

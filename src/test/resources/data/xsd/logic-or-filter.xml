@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Filter xmlns="http://www.af-klm.com/filter"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.af-klm.com/filter filter.xsd">
+
+    <Or>
+        <In>
+            <Attribute>iataAirportCode</Attribute>
+            <Value>MLH</Value>
+            <Value>BSL</Value>
+        </In>
+        <Equals>
+            <Attribute>aircraftType</Attribute>
+            <Value>RFS</Value>
+        </Equals>
+    </Or>
+
+</Filter>

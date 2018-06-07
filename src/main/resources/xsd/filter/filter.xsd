@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.af-klm.com/filter"
+            xmlns:flt="http://www.af-klm.com/filter"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            version="1.0">
+
+    <!-- ============================================= -->
+    <!-- FILTER EXPRESSION                             -->
+    <!-- ============================================= -->
+    <xsd:element name="Filter" type="flt:FilterType"/>
+
+    <!-- ============================================= -->
+    <!-- COMPARISON OPERATORS                          -->
+    <!-- ============================================= -->
+    <xsd:element name="comparison" type="flt:ComparisonType" abstract="true"/>
+    <xsd:element name="Equals"          type="flt:EqualsComparisonType"          substitutionGroup="flt:comparison"/>
+    <xsd:element name="NotEquals"       type="flt:NotEqualsComparisonType"       substitutionGroup="flt:comparison"/>
+    <xsd:element name="Less"            type="flt:LessComparisonType"            substitutionGroup="flt:comparison"/>
+    <xsd:element name="Greater"         type="flt:GreaterComparisonType"         substitutionGroup="flt:comparison"/>
+    <xsd:element name="LessOrEquals"    type="flt:LessOrEqualsComparisonType"    substitutionGroup="flt:comparison"/>
+    <xsd:element name="GreaterOrEquals" type="flt:GreaterOrEqualsComparisonType" substitutionGroup="flt:comparison"/>
+    <xsd:element name="IsNull"          type="flt:IsNullComparisonType"          substitutionGroup="flt:comparison"/>
+    <xsd:element name="IsNotNull"       type="flt:IsNotNullComparisonType"       substitutionGroup="flt:comparison"/>
+    <xsd:element name="Between"         type="flt:BetweenComparisonType"         substitutionGroup="flt:comparison"/>
+    <xsd:element name="In"              type="flt:InComparisonType"              substitutionGroup="flt:comparison"/>
+
+    <!-- ============================================= -->
+    <!-- LOGICAL OPERATORS                             -->
+    <!-- ============================================= -->
+    <xsd:element name="logic" type="flt:LogicType" abstract="true"/>
+    <xsd:element name="And" type="flt:AndLogicType" substitutionGroup="flt:logic"/>
+    <xsd:element name="Or"  type="flt:OrLogicType" substitutionGroup="flt:logic"/>
+    <xsd:element name="Not" type="flt:NotLogicType"  substitutionGroup="flt:logic"/>
+
+    <!-- ============================================= -->
+    <!-- EXPRESSIONS                                   -->
+    <!-- ============================================= -->
+    <xsd:element name="Attribute" type="xsd:string"/>
+    <xsd:element name="Value"     type="xsd:string"/>
+    <xsd:element name="Lower"     type="xsd:string"/>
+    <xsd:element name="Upper"     type="xsd:string"/>
+
+    <!-- ============================================= -->
+    <!-- COMPLEX TYPES                                 -->
+    <!-- ============================================= -->
+    <xsd:complexType name="ComparisonType" abstract="true"/>
+    <xsd:complexType name="LogicType" abstract="true"/>
+
+    <xsd:complexType name="FilterType">
+        <xsd:choice>
+            <xsd:element ref="flt:comparison"/>
+            <xsd:element ref="flt:logic"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="BinaryComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:ComparisonType">
+                <xsd:sequence>
+                    <xsd:element ref="flt:Attribute"/>
+                    <xsd:element ref="flt:Value"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="UnaryComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:ComparisonType">
+                <xsd:sequence>
+                    <xsd:element ref="flt:Attribute"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="EqualsComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="NotEqualsComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="LessComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="LessOrEqualsComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="GreaterComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="GreaterOrEqualsComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="IsNullComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:UnaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="IsNotNullComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:UnaryComparisonType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="BetweenComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:ComparisonType">
+                <xsd:sequence>
+                    <xsd:element ref="flt:Attribute"/>
+                    <xsd:element ref="flt:Lower"/>
+                    <xsd:element ref="flt:Upper"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="InComparisonType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:ComparisonType">
+                <xsd:sequence>
+                    <xsd:element ref="flt:Attribute"/>
+                    <xsd:element ref="flt:Value" minOccurs="1" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="BinaryLogicType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:LogicType">
+                <xsd:choice minOccurs="2" maxOccurs="unbounded">
+                    <xsd:element ref="flt:comparison"/>
+                    <xsd:element ref="flt:logic"/>
+                </xsd:choice>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="UnaryLogicType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:LogicType">
+                <xsd:choice>
+                    <xsd:element ref="flt:comparison"/>
+                    <xsd:element ref="flt:logic"/>
+                </xsd:choice>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="AndLogicType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryLogicType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="OrLogicType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:BinaryLogicType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="NotLogicType">
+        <xsd:complexContent>
+            <xsd:extension base="flt:UnaryLogicType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+ </xsd:schema>

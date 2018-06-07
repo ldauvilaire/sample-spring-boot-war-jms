@@ -34,6 +34,12 @@
 
         <antlr.version>4.7</antlr.version>
 
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+        <jaxb2.version>0.13.2</jaxb2.version>
+        <jaxb2-basics.version>1.11.1</jaxb2-basics.version>
+        <xsd.path>xsd/filter</xsd.path>
+        <xsd.package>net.ldauvilaire.xsd.filter</xsd.package>
+
     </properties>
 
     <dependencyManagement>
@@ -198,11 +204,134 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- This plugin's configuration is used to store Eclipse m2e settings only.
+                     It has no influence on the Maven build itself.
+                -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-antrun-plugin</artifactId>
+                                        <versionRange>${maven-antrun-plugin.version}</versionRange>
+                                        <goals>
+                                            <goal>run</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>false</runOnIncremental>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.jvnet.jaxb2.maven2</groupId>
+                                        <artifactId>maven-jaxb22-plugin</artifactId>
+                                        <versionRange>${jaxb2.version}</versionRange>
+                                        <goals>
+                                            <goal>run</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>false</runOnIncremental>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <!-- Prepare the Generation Folder -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven-antrun-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>initialize-target-folders</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <property name="generationDirectory" location="${project.build.directory}/generated/${xsd.path}" />
+                                    <mkdir dir="${generationDirectory}" />
+                                    <copy todir="${project.build.directory}/generated" flatten="false" overwrite="true">
+                                        <fileset dir="${project.basedir}/src/main/resources" includes="**/*.xsd" />
+                                    </copy>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Generate the JAX-B Java Sources for the OME -->
+                <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb22-plugin</artifactId>
+                    <version>${jaxb2.version}</version>
+                    <executions>
+                        <execution>
+                            <id>generate-java-sources-jvnet-jaxb22</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <schemaDirectory>${project.build.directory}/generated/xsd</schemaDirectory>
+                                <generateDirectory>${project.build.directory}/generated-sources/jaxb22</generateDirectory>
+                                <generatePackage>${xsd.package}</generatePackage>
+                                <schemaIncludes>
+                                    <schemaInclude>**/*.xsd</schemaInclude>
+                                </schemaIncludes>
+                                <bindingDirectory>${project.build.directory}/generated/xsd</bindingDirectory>
+                                <bindingIncludes>
+                                    <bindingInclude>**/*-bindings.xml</bindingInclude>
+                                </bindingIncludes>
+                                <extension>true</extension>
+                                <useDependenciesAsEpisodes>true</useDependenciesAsEpisodes>
+                                <debug>false</debug>
+                                <verbose>false</verbose>
+                                <args>
+                                    <arg>-XJsr303Annotations</arg>
+                                </args>
+                                <plugins>
+                                    <plugin>
+                                        <groupId>com.github.krasa</groupId>
+                                        <artifactId>krasa-jaxb-tools</artifactId>
+                                        <version>1.5</version>
+                                    </plugin>
+                                </plugins>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb22-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.antlr</groupId>

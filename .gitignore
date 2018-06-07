@@ -1,1 +1,7 @@
 /target/
+/.settings
+/.factorypath
+/.classpath
+/.project
+/logs
+/activemq-data
