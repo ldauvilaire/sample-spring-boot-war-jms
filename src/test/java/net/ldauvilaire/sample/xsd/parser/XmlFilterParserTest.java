@@ -60,6 +60,7 @@ public class XmlFilterParserTest {
         Assert.assertTrue(result instanceof AndFilter);
 
         LOGGER.info("Filter as SQL: \n{}", result.toSqlString());
+        LOGGER.info("Filter as XML: \n{}", result.toXmlString(1));
     }
 
     @SuppressWarnings("unchecked")

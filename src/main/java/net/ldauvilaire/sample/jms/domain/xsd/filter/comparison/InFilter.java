@@ -2,6 +2,8 @@ package net.ldauvilaire.sample.jms.domain.xsd.filter.comparison;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.ldauvilaire.sample.jms.domain.xsd.filter.ComparisonOperator;
 
 public class InFilter extends AbstractComparisonFilter {
@@ -30,6 +32,19 @@ public class InFilter extends AbstractComparisonFilter {
             builder.append("'").append(value).append("'");
         }
         builder.append(")");
+        return builder.toString();
+    }
+
+    @Override
+    public String toXmlString(int level) {
+        String prefix = StringUtils.leftPad("", level*3, " ");
+        StringBuilder builder = new StringBuilder("");
+        builder.append(prefix).append("<").append(this.operator.name()).append(">").append("\n");
+        builder.append(prefix).append("   ").append("<ATTRIBUTE>").append(this.attribute).append("</ATTRIBUTE>").append("\n");
+        for (String value : values) {
+            builder.append(prefix).append("   ").append("<VALUE>").append(value).append("</VALUE>").append("\n");
+        }
+        builder.append(prefix).append("</").append(this.operator.name()).append(">").append("\n");
         return builder.toString();
     }
 }
