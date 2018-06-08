@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.af-klm.com/filter filter.xsd">
 
     <Between>
-        <Attribute>flightNumber</Attribute>
+        <Attribute>FLIGHT_NUMBER</Attribute>
         <Lower>1200</Lower>
         <Upper>1300</Upper>
     </Between>

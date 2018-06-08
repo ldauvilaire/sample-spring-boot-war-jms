@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.af-klm.com/filter filter.xsd">
 
     <IsNull>
-        <Attribute>operationalSuffix</Attribute>
+        <Attribute>OPERATIONAL_SUFFIX</Attribute>
     </IsNull>
 
 </Filter>

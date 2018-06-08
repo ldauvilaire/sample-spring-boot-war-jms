@@ -25,6 +25,7 @@
         <postgres.version>9.1-901.jdbc4</postgres.version>
         <liquibase.version>3.5.3</liquibase.version>
         <calcite.version>1.15.0</calcite.version>
+        <commons-io.version>2.6</commons-io.version>
 
         <activemq.version>5.14.0</activemq.version>
 
@@ -132,6 +133,11 @@
             <groupId>org.apache.calcite</groupId>
             <artifactId>calcite-core</artifactId>
             <version>${calcite.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <!-- Dependencies to Third-Party libraries (provided) -->
         <dependency>

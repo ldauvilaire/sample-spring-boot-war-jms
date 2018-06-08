@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.af-klm.com/filter filter.xsd">
 
     <Equals>
-        <Attribute>flightNumber</Attribute>
+        <Attribute>FLIGHT_NUMBER</Attribute>
         <Value>1234</Value>
     </Equals>
 

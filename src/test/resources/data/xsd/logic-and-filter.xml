@@ -5,17 +5,17 @@
 
     <And>
         <In>
-            <Attribute>airlineCode</Attribute>
+            <Attribute>AIRLINE_CODE</Attribute>
             <Value>AF</Value>
             <Value>KL</Value>
             <Value>A5</Value>
         </In>
         <Equals>
-            <Attribute>flightNumber</Attribute>
+            <Attribute>FLIGHT_NUMBER</Attribute>
             <Value>1234</Value>
         </Equals>
         <IsNull>
-            <Attribute>operationalSuffix</Attribute>
+            <Attribute>OPERATIONAL_SUFFIX</Attribute>
         </IsNull>
     </And>
 

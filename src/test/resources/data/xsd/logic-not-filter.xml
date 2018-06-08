@@ -5,7 +5,7 @@
 
     <Not>
         <In>
-            <Attribute>iataAirportCode</Attribute>
+            <Attribute>IATA_AIRPORT_CODE</Attribute>
             <Value>MLH</Value>
             <Value>BSL</Value>
         </In>
